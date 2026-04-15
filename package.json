@@ -1,0 +1,28 @@
+{
+  "name": "buildmoat-calendar",
+  "version": "1.0.0",
+  "description": "2026 Live Session Calendar",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "dayjs": "^1.11.20",
+    "lucide-vue-next": "^1.0.0",
+    "vue": "^3.5.32"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8",
+    "vue-tsc": "^3.2.6"
+  }
+}
