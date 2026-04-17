@@ -30,7 +30,7 @@ function closeModal() {
 
     <!-- Sticky header -->
     <header class="sticky top-0 z-40 border-b border-white/5" style="background: rgba(8,8,8,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div class="flex items-center gap-3">
           <!-- Gold dot accent -->
           <span class="w-2 h-2 rounded-full bg-[#ffd700] shadow-[0_0_8px_rgba(255,215,0,0.8)] shrink-0"></span>
@@ -46,7 +46,7 @@ function closeModal() {
     </header>
 
     <!-- Hero section -->
-    <section class="max-w-6xl mx-auto px-6 pt-12 pb-8">
+    <section class="max-w-7xl mx-auto px-6 pt-12 pb-8">
       <p class="text-xs font-semibold tracking-[0.2em] text-[#ffd700]/60 uppercase mb-3">BuildMoat · 2026</p>
       <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight mb-3"
         style="background: linear-gradient(135deg, #ffffff 10%, #ffd700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -72,7 +72,7 @@ function closeModal() {
     </section>
 
     <!-- Calendar -->
-    <main class="max-w-6xl mx-auto px-6 pb-16">
+    <main class="max-w-7xl mx-auto px-6 pb-16">
       <CalendarManager
         :timezone="selectedTimezone"
         :events="LIVE_EVENTS"

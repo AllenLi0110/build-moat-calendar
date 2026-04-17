@@ -40,14 +40,19 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const TODAY = dayjs().format('YYYY-MM-DD')
 const NOW = dayjs()
 
+interface EventEntry {
+  event: LiveEvent
+  time: string
+  shortTime: string // compact format e.g. "10am", "11am"
+  isPast: boolean
+}
+
 interface DayCell {
   date: string // YYYY-MM-DD
   dayNumber: number
   isCurrentMonth: boolean
   isToday: boolean
-  isPast: boolean
-  event: LiveEvent | null
-  eventTime: string
+  events: EventEntry[]
 }
 
 const cells = computed<DayCell[]>(() => {
@@ -55,11 +60,19 @@ const cells = computed<DayCell[]>(() => {
   const startPad = firstOfMonth.day() // 0=Sun
   const daysInMonth = firstOfMonth.daysInMonth()
 
-  // Build event lookup: date string -> event
-  const eventMap = new Map<string, { event: LiveEvent; time: string; isPast: boolean }>()
+  // Build event lookup: date string -> sorted list of events
+  const eventMap = new Map<string, EventEntry[]>()
   for (const ev of props.events) {
     const { date, time } = getEventLocalDatetime(ev, props.timezone)
-    eventMap.set(date, { event: ev, time, isPast: dayjs.utc(ev.datetimeUtc).isBefore(NOW) })
+    const shortTime = dayjs.utc(ev.datetimeUtc).tz(props.timezone).format('ha') // e.g. "10am"
+    const entry: EventEntry = { event: ev, time, shortTime, isPast: dayjs.utc(ev.datetimeUtc).isBefore(NOW) }
+    const existing = eventMap.get(date)
+    if (existing) {
+      existing.push(entry)
+      existing.sort((a, b) => (a.event.datetimeUtc < b.event.datetimeUtc ? -1 : 1))
+    } else {
+      eventMap.set(date, [entry])
+    }
   }
 
   const result: DayCell[] = []
@@ -68,30 +81,24 @@ const cells = computed<DayCell[]>(() => {
   for (let i = 0; i < startPad; i++) {
     const d = firstOfMonth.subtract(startPad - i, 'day')
     const dateStr = d.format('YYYY-MM-DD')
-    const ev = eventMap.get(dateStr)
     result.push({
       date: dateStr,
       dayNumber: d.date(),
       isCurrentMonth: false,
       isToday: dateStr === TODAY,
-      event: ev?.event ?? null,
-      eventTime: ev?.time ?? '',
-      isPast: ev?.isPast ?? false,
+      events: eventMap.get(dateStr) ?? [],
     })
   }
 
   // Current month days
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = firstOfMonth.date(d).format('YYYY-MM-DD')
-    const ev = eventMap.get(dateStr)
     result.push({
       date: dateStr,
       dayNumber: d,
       isCurrentMonth: true,
       isToday: dateStr === TODAY,
-      event: ev?.event ?? null,
-      eventTime: ev?.time ?? '',
-      isPast: ev?.isPast ?? false,
+      events: eventMap.get(dateStr) ?? [],
     })
   }
 
@@ -100,15 +107,12 @@ const cells = computed<DayCell[]>(() => {
   for (let i = 1; i <= remaining; i++) {
     const d = firstOfMonth.date(daysInMonth).add(i, 'day')
     const dateStr = d.format('YYYY-MM-DD')
-    const ev = eventMap.get(dateStr)
     result.push({
       date: dateStr,
       dayNumber: d.date(),
       isCurrentMonth: false,
       isToday: dateStr === TODAY,
-      event: ev?.event ?? null,
-      eventTime: ev?.time ?? '',
-      isPast: ev?.isPast ?? false,
+      events: eventMap.get(dateStr) ?? [],
     })
   }
 
@@ -120,46 +124,49 @@ const monthLabel = computed(() => {
 })
 
 function handleCellClick(cell: DayCell) {
-  if (cell.event) {
-    emit('eventClick', cell.event, cell.date, cell.eventTime)
+  if (cell.events.length === 1) {
+    handleEventClick(cell.events[0], cell)
   }
 }
 
-const isKickoff = (cell: DayCell) => cell.event?.type === 'kickoff'
-
 function cellBg(cell: DayCell): string {
-  if (!cell.event) return cell.isToday ? 'rgba(255,255,255,0.03)' : 'transparent'
-  if (isKickoff(cell)) return cell.isPast ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)'
-  if (cell.isPast) return 'rgba(255,215,0,0.025)'
+  const primary = cell.events[0]
+  if (!primary) return cell.isToday ? 'rgba(255,255,255,0.03)' : 'transparent'
+  if (primary.event.type === 'kickoff') return primary.isPast ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.05)'
+  if (primary.isPast) return 'rgba(255,215,0,0.025)'
   return 'rgba(255,215,0,0.06)'
 }
 
 function cellBorder(cell: DayCell): string {
-  if (!cell.event) return '1px solid rgba(255,255,255,0.03)'
-  if (isKickoff(cell)) return cell.isPast ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(255,255,255,0.1)'
-  if (cell.isPast) return '1px solid rgba(255,215,0,0.04)'
+  const primary = cell.events[0]
+  if (!primary) return '1px solid rgba(255,255,255,0.03)'
+  if (primary.event.type === 'kickoff') return primary.isPast ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(255,255,255,0.1)'
+  if (primary.isPast) return '1px solid rgba(255,215,0,0.04)'
   return '1px solid rgba(255,215,0,0.08)'
 }
 
 function numberStyle(cell: DayCell): string {
-  // Kickoff date
-  if (isKickoff(cell) && cell.isToday) {
+  const primary = cell.events[0]
+  const isKickoff = primary?.event.type === 'kickoff'
+  const isPast = primary?.isPast ?? false
+  const hasEvent = !!primary
+
+  if (isKickoff && cell.isToday) {
     return 'background: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.4), 0 2px 8px rgba(255,255,255,0.3); color: #000;'
   }
-  if (isKickoff(cell) && cell.isPast) {
+  if (isKickoff && isPast) {
     return 'background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.5);'
   }
-  if (isKickoff(cell)) {
+  if (isKickoff) {
     return 'background: rgba(255,255,255,0.9); box-shadow: 0 2px 8px rgba(255,255,255,0.2); color: #000;'
   }
-  // Live session
-  if (cell.event && cell.isToday) {
+  if (hasEvent && cell.isToday) {
     return 'background: linear-gradient(135deg, #ffd700, #ffec60); box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px rgba(255,215,0,0.5), 0 2px 10px rgba(255,215,0,0.5); color: #000;'
   }
-  if (cell.event && cell.isPast) {
+  if (hasEvent && isPast) {
     return 'background: rgba(160,120,0,0.45); color: rgba(255,215,0,0.6);'
   }
-  if (cell.event) {
+  if (hasEvent) {
     return 'background: linear-gradient(135deg, #ffd700, #ffec60); box-shadow: 0 2px 8px rgba(255,215,0,0.4); color: #000;'
   }
   if (cell.isToday) {
@@ -167,6 +174,33 @@ function numberStyle(cell: DayCell): string {
   }
   if (cell.isCurrentMonth) return 'color: rgba(255,255,255,0.7);'
   return 'color: rgba(255,255,255,0.15);'
+}
+
+function eventChipStyle(entry: EventEntry): string {
+  if (entry.event.type === 'kickoff') {
+    return entry.isPast
+      ? 'background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3);'
+      : 'background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75);'
+  }
+  if (entry.event.type === 'sharing') {
+    return entry.isPast
+      ? 'background: rgba(100,180,255,0.08); color: rgba(100,180,255,0.35);'
+      : 'background: rgba(100,180,255,0.15); color: rgba(100,180,255,0.9);'
+  }
+  // live
+  return entry.isPast
+    ? 'background: rgba(255,215,0,0.08); color: rgba(255,215,0,0.35);'
+    : 'background: rgba(255,215,0,0.15); color: rgba(255,215,0,0.9);'
+}
+
+function eventLabel(entry: EventEntry, short = false): string {
+  if (entry.event.type === 'kickoff') return 'START'
+  if (entry.event.isRecord) return 'REC'
+  return short ? entry.shortTime : entry.time
+}
+
+function handleEventClick(entry: EventEntry, cell: DayCell) {
+  emit('eventClick', entry.event, cell.date, entry.time)
 }
 </script>
 
@@ -225,7 +259,7 @@ function numberStyle(cell: DayCell): string {
         :key="cell.date"
         :class="[
           'relative min-h-[72px] flex flex-col items-center justify-start pt-2 pb-1',
-          cell.event ? 'cursor-pointer group' : '',
+          cell.events.length === 1 ? 'cursor-pointer group' : '',
         ]"
         :style="cell.isCurrentMonth
           ? `background: ${cellBg(cell)}; border-bottom: ${cellBorder(cell)}; border-right: ${cellBorder(cell)};`
@@ -235,9 +269,9 @@ function numberStyle(cell: DayCell): string {
         <!-- Only render content for current month cells -->
         <template v-if="cell.isCurrentMonth">
 
-        <!-- Hover glow overlay for event cells -->
+        <!-- Hover glow overlay for single-event cells -->
         <div
-          v-if="cell.event"
+          v-if="cell.events.length === 1"
           class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
           style="background: rgba(255,215,0,0.06);"
         ></div>
@@ -246,35 +280,56 @@ function numberStyle(cell: DayCell): string {
         <span
           :class="[
             'relative z-10 text-xs w-7 h-7 flex items-center justify-center rounded-full transition-all duration-200',
-            cell.event ? 'group-hover:scale-110' : '',
+            cell.events.length === 1 ? 'group-hover:scale-110' : '',
           ]"
           :style="numberStyle(cell)"
         >
           {{ cell.dayNumber }}
         </span>
 
-        <!-- Today label (non-event) -->
+        <!-- Today label (no events) -->
         <span
-          v-if="cell.isToday && !cell.event"
+          v-if="cell.isToday && cell.events.length === 0"
           class="relative z-10 text-[8px] font-bold tracking-widest uppercase mt-1 leading-none"
           style="color: rgba(255,255,255,0.4);"
         >
           TODAY
         </span>
 
-        <!-- Event time + today badge (event day) -->
+        <!-- Single event: time + optional TODAY badge -->
         <span
-          v-if="cell.event"
+          v-if="cell.events.length === 1"
           class="relative z-10 text-[9px] font-semibold tracking-wide mt-1 leading-none flex items-center gap-1"
-          :style="cell.isPast ? 'color: rgba(255,215,0,0.35);' : 'color: rgba(255,215,0,0.8);'"
+          :style="cell.events[0].isPast ? 'color: rgba(255,215,0,0.35);' : 'color: rgba(255,215,0,0.8);'"
         >
-          {{ cell.event.type === 'kickoff' ? 'START' : cell.event.isRecord ? 'RECORD' : cell.eventTime }}
+          {{ eventLabel(cell.events[0]) }}
           <span
             v-if="cell.isToday"
             class="text-[7px] font-bold tracking-widest uppercase px-1 py-0.5 rounded"
             style="background: rgba(255,255,255,0.15); color: #fff; line-height: 1;"
           >TODAY</span>
         </span>
+
+        <!-- Multiple events: stacked chips, each individually clickable -->
+        <div
+          v-if="cell.events.length > 1"
+          class="relative z-10 mt-1 flex flex-col gap-0.5 w-full items-center"
+        >
+          <span
+            v-if="cell.isToday"
+            class="text-[7px] font-bold tracking-widest uppercase text-center mb-0.5"
+            style="color: rgba(255,255,255,0.4);"
+          >TODAY</span>
+          <span
+            v-for="entry in cell.events"
+            :key="entry.event.datetimeUtc"
+            class="text-[8px] font-semibold leading-none px-1 py-0.5 rounded truncate cursor-pointer transition-opacity duration-150 hover:opacity-70"
+            :style="eventChipStyle(entry)"
+            @click.stop="handleEventClick(entry, cell)"
+          >
+            {{ eventLabel(entry) }}
+          </span>
+        </div>
 
         </template>
       </div>

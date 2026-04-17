@@ -1,4 +1,4 @@
-# Zoom 通知信範本
+# 職場護城河實戰營 <notifications@m.teachable.com> + zoom <no-reply@zoom.us>
 
 > 每場直播前複製對應場次的內容，填入 Zoom 連結與 Agenda 後發送。
 
@@ -12,7 +12,7 @@
 📅 Live Session 01
 
 🕐 直播時間
-・台灣 / 新加坡  2026-05-02（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-05-02（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-05-02（六） 12:00 PM（AEST）
 ・美東 New York  2026-05-01（五） 10:00 PM（EDT）
 ・美西 LA        2026-05-01（五）  7:00 PM（PDT）
@@ -22,6 +22,8 @@
 
 📋 Agenda
 [填入本次課程大綱]
+prototype README:
+templates:
 
 如有任何問題歡迎在社群中提問，我們直播見！
 ```
@@ -36,7 +38,7 @@
 📅 Live Session 02
 
 🕐 直播時間
-・台灣 / 新加坡  2026-05-09（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-05-09（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-05-09（六） 12:00 PM（AEST）
 ・美東 New York  2026-05-08（五） 10:00 PM（EDT）
 ・美西 LA        2026-05-08（五）  7:00 PM（PDT）
@@ -46,6 +48,9 @@
 
 📋 Agenda
 [填入本次課程大綱]
+qr-code-generator-deep-dive
+prototype README:
+templates:
 
 如有任何問題歡迎在社群中提問，我們直播見！
 ```
@@ -60,7 +65,7 @@
 📅 Live Session 03
 
 🕐 直播時間
-・台灣 / 新加坡  2026-05-16（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-05-16（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-05-16（六） 12:00 PM（AEST）
 ・美東 New York  2026-05-15（五） 10:00 PM（EDT）
 ・美西 LA        2026-05-15（五）  7:00 PM（PDT）
@@ -70,6 +75,8 @@
 
 📋 Agenda
 [填入本次課程大綱]
+prototype README:
+templates:
 
 如有任何問題歡迎在社群中提問，我們直播見！
 ```
@@ -84,7 +91,7 @@
 📅 Live Session 04
 
 🕐 直播時間
-・台灣 / 新加坡  2026-05-23（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-05-23（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-05-23（六） 12:00 PM（AEST）
 ・美東 New York  2026-05-22（五） 10:00 PM（EDT）
 ・美西 LA        2026-05-22（五）  7:00 PM（PDT）
@@ -108,7 +115,7 @@
 📅 Live Session 05
 
 🕐 直播時間
-・台灣 / 新加坡  2026-05-30（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-05-30（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-05-30（六） 12:00 PM（AEST）
 ・美東 New York  2026-05-29（五） 10:00 PM（EDT）
 ・美西 LA        2026-05-29（五）  7:00 PM（PDT）
@@ -132,7 +139,7 @@
 📅 Live Session 06
 
 🕐 直播時間
-・台灣 / 新加坡  2026-06-06（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-06-06（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-06-06（六） 12:00 PM（AEST）
 ・美東 New York  2026-06-05（五） 10:00 PM（EDT）
 ・美西 LA        2026-06-05（五）  7:00 PM（PDT）
@@ -156,7 +163,7 @@
 📅 Live Session 07
 
 🕐 直播時間
-・台灣 / 新加坡  2026-06-13（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-06-13（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-06-13（六） 12:00 PM（AEST）
 ・美東 New York  2026-06-12（五） 10:00 PM（EDT）
 ・美西 LA        2026-06-12（五）  7:00 PM（PDT）
@@ -180,7 +187,7 @@ https://us06web.zoom.us/j/82334893528?pwd=WPm63jqxONwHPmthx2qJ5dyb1yX6jr.1
 📅 Live Session 08
 
 🕐 直播時間
-・台灣 / 新加坡  2026-06-20（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-06-20（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-06-20（六） 12:00 PM（AEST）
 ・美東 New York  2026-06-19（五） 10:00 PM（EDT）
 ・美西 LA        2026-06-19（五）  7:00 PM（PDT）
@@ -204,7 +211,7 @@ https://us06web.zoom.us/j/82334893528?pwd=WPm63jqxONwHPmthx2qJ5dyb1yX6jr.1
 📅 Live Session 09
 
 🕐 直播時間
-・台灣 / 新加坡  2026-06-27（六） 10:00 AM（GMT+8）
+・台灣 / 新加坡  2026-06-27（六） 10:00 AM（UTC+8）
 ・澳洲 Sydney    2026-06-27（六） 12:00 PM（AEST）
 ・美東 New York  2026-06-26（五） 10:00 PM（EDT）
 ・美西 LA        2026-06-26（五）  7:00 PM（PDT）

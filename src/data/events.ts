@@ -5,7 +5,7 @@ import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
-export type EventType = 'live' | 'kickoff'
+export type EventType = 'live' | 'kickoff' | 'sharing'
 
 export interface LiveEvent {
   id: number
@@ -21,7 +21,7 @@ export interface LiveEvent {
 // First session: 2026-05-02 10:00 AM Asia/Taipei (UTC+8) => 2026-05-02T02:00:00Z
 const FIRST_SESSION_TZ = 'Asia/Taipei'
 const FIRST_SESSION_LOCAL = '2026-05-02 10:00'
-const SESSION_COUNT = 9
+const SESSION_COUNT = 8
 
 function generateEvents(): LiveEvent[] {
   const events: LiveEvent[] = []
@@ -77,9 +77,21 @@ const KICKOFF_EVENTS: LiveEvent[] = [
   },
 ]
 
+const SHARING_EVENTS: LiveEvent[] = [
+  {
+    id: 0,
+    name: '專業分享 EP01',
+    description: '專業分享系列第一集，歡迎參與。',
+    // 2026-05-16 11:00 AM Asia/Taipei (UTC+8) => 2026-05-16T03:00:00Z
+    datetimeUtc: '2026-05-16T03:00:00.000Z',
+    type: 'sharing',
+  },
+]
+
 export const LIVE_EVENTS: LiveEvent[] = [
   ...ONE_OFF_EVENTS,
   ...KICKOFF_EVENTS,
+  ...SHARING_EVENTS,
   ...generateEvents(),
 ]
 
