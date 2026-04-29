@@ -86,6 +86,14 @@ const SHARING_EVENTS: LiveEvent[] = [
     datetimeUtc: '2026-05-16T03:00:00.000Z',
     type: 'sharing',
   },
+  {
+    id: 1,
+    name: '專業分享 EP02',
+    description: '專業分享系列第二集，歡迎參與。',
+    // 2026-06-06 11:00 AM Asia/Taipei (UTC+8) => 2026-06-06T03:00:00Z
+    datetimeUtc: '2026-06-06T03:00:00.000Z',
+    type: 'sharing',
+  },
 ]
 
 export const LIVE_EVENTS: LiveEvent[] = [

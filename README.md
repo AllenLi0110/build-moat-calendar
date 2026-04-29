@@ -22,7 +22,7 @@ A timezone-aware live session calendar for the BuildMoat 2026 System Design Boot
 |---|---|
 | F1 | Display a monthly calendar grid for Jan – Jun 2026 |
 | F2 | Mark all 8 weekly Live Sessions (Sat 10:00 AM Taipei, May 2 – Jun 20) |
-| F3 | Mark one-off events: 直播聊聊 1–3, 實戰營正式開課, 專業分享 EP01 |
+| F3 | Mark one-off events: 直播聊聊 1–3, 實戰營正式開課, 專業分享 EP01, 專業分享 EP02 |
 | F4 | Support 4 timezones; auto-detect user's browser timezone on load |
 | F5 | Shift event markers to the correct local date when timezone changes cross midnight |
 | F6 | Show event detail modal on click (name, local date/time, format, recording info) |
@@ -116,7 +116,7 @@ DayCell[]  ──click──▶  emit('eventClick', event, localDate, localTime)
 |---|---|---|
 | `live` (default) | Gold `#ffd700` | 實戰營 Live Session 1–8 |
 | `kickoff` | White | 實戰營正式開課 |
-| `sharing` | Light blue `rgba(100,180,255,…)` | 專業分享 EP01 |
+| `sharing` | Light blue `rgba(100,180,255,…)` | 專業分享 EP01, EP02 |
 | `isRecord: true` | Gold (dimmed) | 直播聊聊 1–3 |
 
 ### Event Schedule
@@ -134,6 +134,7 @@ DayCell[]  ──click──▶  emit('eventClick', event, localDate, localTime)
 | Live Session 4 | 2026-05-23T02:00Z | May 23, 10:00 AM |
 | Live Session 5 | 2026-05-30T02:00Z | May 30, 10:00 AM |
 | Live Session 6 | 2026-06-06T02:00Z | Jun 6, 10:00 AM |
+| 專業分享 EP02 | 2026-06-06T03:00Z | Jun 6, 11:00 AM |
 | Live Session 7 | 2026-06-13T02:00Z | Jun 13, 10:00 AM |
 | Live Session 8 | 2026-06-20T02:00Z | Jun 20, 10:00 AM |
 
